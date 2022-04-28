@@ -1,0 +1,74 @@
+<!-- index.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- load stylesheet for css -->
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <!-- tab title -->
+    <title>Plant Generator</title>
+    <!-- favicon -->
+    <link rel="icon" type="image/x-icon" href="/assets/mushroom_tiny.ico">
+</head>
+<body>
+    <div id="settings-wrapper">
+        <form id="plantForm"> <!-- add selectable presets -->
+            <label for="fractalType">L-System</label>
+            <select id="fractalType" name="fractalType">
+                <option value="select">Select Preset</option>
+                <option value="1">01. Lavender (Stochastic)</option>
+                <option value="2">02. Fennel (Stochastic)</option>
+                <option value="3">03. Seaweed</option>
+                <option value="4">04. Plant 4</option>
+                <option value="5">05. Parsley</option>
+                <option value="6">06. Dill</option>
+                <!--
+                <option value="2">07. CS 1</option>
+                <option value="3">08. CS 2</option>
+                <option value="4">09. CS 3</option>
+                <option value="5">10. CS 4</option>
+                <option value="6">11. CS 5</option>
+                -->
+            </select>
+            <br>
+            <label for="genSlider">Generation</label>
+            <input type="range" id="genSlider"
+                min="0"
+                max="10"
+                step="1"><br>
+            <!--
+            <label for="angleSlider">deg</label>
+            <input type="range" id="angleSlider"
+                min="0"
+                max="25"
+                step="1"><br>
+            -->
+            <label for="scaleSlider">Stroke Size</label>
+            <input type="range" id="scaleSlider"
+                min="1"
+                max="1"
+                value="0"
+                step="0.5">
+            <br>
+            <input type="submit" id="submit" value="Generate">
+            <button type="button" id="download"
+                onclick="DownloadPlantIMG()">
+                Save PNG 
+            </button>
+        </form>
+    </div>
+
+    <script src="utilities.js"></script>
+
+    <div id="canvas-wrapper">
+        <canvas id="canvas" width=500 height=750></canvas>
+    </div>
+
+    <script src="events.js"></script>
+    <script src="turtle.js"></script>
+    <script src="presets.js"></script>
+    <script src="plant-gen.js"></script>
+</body>
+</html>
