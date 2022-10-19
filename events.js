@@ -6,6 +6,9 @@ console.log("running events.js...");
 
 const canvas = document.getElementById('canvas');
 var ctx = canvas.getContext('2d');
+paper.setup(canvas);
+var plantPath = new paper.Path();
+
 
 var width = canvas.width;
 var height = canvas.height;

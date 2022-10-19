@@ -62,9 +62,11 @@ class Turtle {
         if (this._MAX_Y < y) this._MAX_Y = y;
         if (this._MIN_Y > y) this._MIN_Y = y;
         
-        ctx.moveTo(this.x, this.y);
-        ctx.lineTo(x, y);
-        ctx.stroke();
+        plantPath.moveTo(this.x, this.y);
+        plantPath.add(x, y)
+        //ctx.moveTo(this.x, this.y);
+        //ctx.lineTo(x, y);
+        //ctx.stroke();
         
         this.x = x;
         this.y = y;

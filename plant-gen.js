@@ -52,15 +52,17 @@ let genResults = new Array();
         // set background color ------------------------------------------------
         
         // set plant stroke color ----------------------------------------------
-        ctx.strokeStyle = 'black';
-        lindenmeyer(axiom, rules, n); // , angle);
+        //ctx.strokeStyle = 'black';
+        lindenmayer(axiom, rules, n); // , angle);
     });
 } ());
 
-function lindenmeyer(axiom, rules, n, angle)
+function lindenmayer(axiom, rules, n, angle)
 {   
-    ctx.beginPath();
-    ctx.moveTo(width/2, height/2);
+    plantPath.strokeColor = 'black';
+    //ctx.beginPath();
+    plantPath.add(new paper.Point(width/2, height/2))
+    //ctx.moveTo(width/2, height/2);
 
     genResults.push(axiom);
     var resultant = axiom;
