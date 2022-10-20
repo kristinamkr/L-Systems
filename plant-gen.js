@@ -61,7 +61,7 @@ function lindenmayer(axiom, rules, n, angle)
 {   
     plantPath.strokeColor = 'black';
     //ctx.beginPath();
-    plantPath.add(new paper.Point(width/2, height/2))
+    //plantPath.add(new paper.Point(width/2, height/2))
     //ctx.moveTo(width/2, height/2);
 
     genResults.push(axiom);
@@ -72,7 +72,7 @@ function lindenmayer(axiom, rules, n, angle)
     }
 
     draw(resultant);
-    ctx.closePath();
+    //ctx.closePath();
     console.log("done!");
 }
 
@@ -187,6 +187,7 @@ function getGenerationX(idx)
     t.resetAngle();
     t.initBoundaries();
 
+
     ctx.beginPath();
     ctx.moveTo(origin[0], origin[1]);
     drawLSystem(genResults[idx]);
@@ -224,10 +225,11 @@ function scale(len)
 
     let idx = getGenerationIndex();
 
-    ctx.beginPath();
-    ctx.moveTo(origin[0], origin[1]);
+    plantPath.moveTo(origin[0], origin[1]);
+    //ctx.beginPath();
+    //ctx.moveTo(origin[0], origin[1]);
     drawLSystem(genResults[idx]);
-    ctx.closePath();
+    //ctx.closePath();
 }
 
 document.getElementById("scaleSlider").addEventListener('click', (event) => {

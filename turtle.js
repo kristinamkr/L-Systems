@@ -63,7 +63,7 @@ class Turtle {
         if (this._MIN_Y > y) this._MIN_Y = y;
         
         plantPath.moveTo(this.x, this.y);
-        plantPath.add(x, y)
+        plantPath.children[plantPath.children.length-1].add(new paper.Point(x, y));
         //ctx.moveTo(this.x, this.y);
         //ctx.lineTo(x, y);
         //ctx.stroke();
@@ -96,7 +96,8 @@ class Turtle {
         if (this._MAX_Y < y) this._MAX_Y = y;
         if (this._MIN_Y > y) this._MIN_Y = y;
         
-        ctx.moveTo(this.x, this.y);
+        plantPath.moveTo(this.x, this.y);
+        //ctx.moveTo(this.x, this.y);
 
         this.x = x;
         this.y = y;
@@ -127,6 +128,7 @@ class Turtle {
         this.x = point[0];
         this.y = point[1];
         this.a = point[2];
+        plantPath.moveTo(this.x, this.y);
     }
 
     // i have no idea what i tried doing here but it needs to be fixed later
