@@ -61,7 +61,7 @@ var submitCounter = 0;
         console.log(paper.project.layers);
 
         lindenmayer(axiom, rules, n); // , angle);
-        getGenealogy();
+        // getGenealogy();
         submitCounter++;
     });
 } ());
@@ -106,20 +106,17 @@ function lindenmayer(axiom, rules, n, angle)
 function draw(resultant)
 {
     // trace first to get the right dimensions ---------------------------------
-    traceLSystem(resultant);
-    console.log(t.fitsCanvas());    
+    // traceLSystem(resultant);
+    // console.log(t.fitsCanvas());    
 
-    // t.centerOrigin();  // recenter origin point
     t.setPosition();   // set starting position to new origin 
 
     // prepare positioning and draw --------------------------------------------
     t.resetAngle();    // reset angle for drawing
-    t.initBoundaries();
 
     drawLSystem(resultant);
 
     t.resetAngle();
-    t.initBoundaries();
 }
 
 function applyRules(rules, current)
@@ -214,7 +211,6 @@ function getGenerationX(idx)
 
     t.setPosition();
     t.resetAngle();
-    t.initBoundaries();
     createLayer(currentName);
 
     plantPath = new paper.CompoundPath();

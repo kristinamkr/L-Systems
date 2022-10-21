@@ -5,24 +5,18 @@
 console.log("running turtle.js...");
 
 class Turtle {
-    _NORTH = 90;
+    _NORTH = -90;
     _step  = 5;
     _angle;
     _origin;
 
-    _MAX_X; // use MAX, MIN to designate image borders
-    _MIN_X;
-    _MAX_Y;
-    _MIN_Y;
-    
+    // NOTE TO SELF - origin = midpoint passed through plantGen turtle construct
     constructor(origin) {
         this._origin = origin;
         this.x = origin[0];
         this.y = origin[1];
         this.a = this._NORTH;
         this.savedState = new Array();
-
-        this.initBoundaries();
     }
 
     getPosition() { return [this.x, this.y]; }
@@ -33,35 +27,17 @@ class Turtle {
 
     getOrigin()   { return this._origin; }
 
-    getBoundaries()
-    {
-        // console.log("min_x: "+this._MIN_X+"\nmin_y: "+this._MIN_Y+"\n\nmax_x: "+this._MAX_X+"\nmax_y: "+this._MAX_Y);
-        return [[this._MIN_X, this._MIN_Y], [this._MAX_X, this._MAX_Y]];
-    }
-
-    getCenter()
-    {
-        let w_ = (this._MAX_X - this._MIN_X) / 2.0;
-        let h_ = (this._MAX_Y - this._MIN_Y) / 2.0;
-        // console.log("-=-=- center -=-=-\n\tw_: "+w_+"\n\th_: "+h_);
-        return [w_, h_];
-    }
+    // getCenter()   { paper.
 
     turnLeft()  { this.a += this._angle; }
 
     turnRight() { this.a -= this._angle; }
 
-    // draws a straight line ahead
     moveForward()
     {
         let x = this.x + this._step * Math.cos(degreesToRadians(this.a));
         let y = this.y + this._step * Math.sin(degreesToRadians(this.a));
 
-        if (this._MAX_X < x) this._MAX_X = x;
-        if (this._MIN_X > x) this._MIN_X = x;
-        if (this._MAX_Y < y) this._MAX_Y = y;
-        if (this._MIN_Y > y) this._MIN_Y = y;
-        
         plantPath.moveTo(this.x, this.y);
         plantPath.children[plantPath.children.length-1].add(new paper.Point(x, y));
         
@@ -88,11 +64,6 @@ class Turtle {
         let x = this.x + this._step * Math.cos(degreesToRadians(this.a));
         let y = this.y + this._step * Math.sin(degreesToRadians(this.a));
 
-        if (this._MAX_X < x) this._MAX_X = x;
-        if (this._MIN_X > x) this._MIN_X = x;
-        if (this._MAX_Y < y) this._MAX_Y = y;
-        if (this._MIN_Y > y) this._MIN_Y = y;
-        
         plantPath.moveTo(this.x, this.y);
 
         this.x = x;
@@ -127,34 +98,21 @@ class Turtle {
         plantPath.moveTo(this.x, this.y);
     }
 
-    // i have no idea what i tried doing here but it needs to be fixed later
-    // currently breaks initially generated plant's bounding box
-    centerOrigin() // not quite center canvas...
-    {
-        let origin = this.getOrigin();
-        let center = this.getCenter();
-        // console.log("Origin center = "+origin);
-        // console.log("centerOrigin center = "+center);
-        
-        // if ( 
-        if (center[0] > 0) origin[0] = origin[0] - center[0];
-        else if (center[0] < 0) origin[0] = origin[0] + center[0];
-        
-        if (center[1] > 0) origin[1] = origin[1] - center[1];
-        else if (center[1] < 0) origin[1] = origin[1] + center[1];
-
-        this.setOrigin([width/2, origin[1]]);
-        // console.log("new origin: "+this.getOrigin());
-    }
-
+    /*
     fitsCanvas()
     {
-        let w_ = Math.ceil(Math.abs(this._MAX_X) - Math.abs(this._MIN_X));
-        let h_ = Math.ceil(Math.abs(this._MIN_Y) - Math.abs(this._MAX_Y));
+        let plantBounds = plantPath.bounds;
+        let max_x = plantPath.bounds._x + plantPath.bounds._width;
+        let max_y = plantPath.bounds._y + plantPath.bounds._height;
+        console.log("inside fitsCanvas... \n\tmax_x = " + max_x + "\n\tmax_y = " + max_y);
+
+        let w_ = Math.ceil(Math.abs(max_x) - Math.abs(plantPath.bounds._x));
+        let h_ = Math.ceil(Math.abs(plantPath.bounds._y) - Math.abs(max_y));
 
         if ((w_ * h_) > (width * height)) return false;
         return true;        
     }
+    */
 
     setAngle(angle) { this._angle = angle; }
 
@@ -175,18 +133,9 @@ class Turtle {
    
     resetAngle()  { this.a = this._NORTH; }
 
-    initBoundaries()
-    {
-        this._MAX_X = this.x;
-        this._MIN_X = this.x;
-        this._MAX_Y = this.y;
-        this._MIN_Y = this.y;
-    }
-    
     reset()
     {
         this.resetOrigin();
-        this.initBoundaries();
         this.resetAngle();
     }
 }
