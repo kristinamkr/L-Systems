@@ -64,9 +64,6 @@ class Turtle {
         
         plantPath.moveTo(this.x, this.y);
         plantPath.children[plantPath.children.length-1].add(new paper.Point(x, y));
-        //ctx.moveTo(this.x, this.y);
-        //ctx.lineTo(x, y);
-        //ctx.stroke();
         
         this.x = x;
         this.y = y;
@@ -97,7 +94,6 @@ class Turtle {
         if (this._MIN_Y > y) this._MIN_Y = y;
         
         plantPath.moveTo(this.x, this.y);
-        //ctx.moveTo(this.x, this.y);
 
         this.x = x;
         this.y = y;
@@ -132,6 +128,7 @@ class Turtle {
     }
 
     // i have no idea what i tried doing here but it needs to be fixed later
+    // currently breaks initially generated plant's bounding box
     centerOrigin() // not quite center canvas...
     {
         let origin = this.getOrigin();

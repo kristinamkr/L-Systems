@@ -11,7 +11,19 @@
     <title>Plant Generator</title>
     <!-- favicon -->
     <link rel="icon" type="image/x-icon" href="/assets/mushroom_tiny.ico">
+    <!-- jquery -->
+    <script src="jquery-3.6.1.min.js"></script>
+    <!-- paper.js --> 
     <script type="text/javascript" src="node_modules/paper/dist/docs/assets/js/paper.js"></script>
+    <!-- colorwheel --> 
+    <script type="text/javascript" src="farbtastic/farbtastic.js"></script>
+    <link rel="stylesheet" href="farbtastic/farbtastic.css" type="text/css" />
+    <script type="text/javascript" charset="utf-8">
+     $(document).ready(function() {
+       $('#demo').hide();
+       $('#picker').farbtastic('#color');
+     });
+    </script>
 </head>
 <body>
     <div id="settings-wrapper">
@@ -53,10 +65,17 @@
                 value="0"
                 step="0.5">
             <br>
+              <div class="form-item"><label for="color">Color: </label>
+                  <input type="text" id="color" name="color" value="#123456"/></div><div id="picker"></div>
+            <br>
             <input type="submit" id="submit" value="Generate">
             <button type="button" id="download"
                 onclick="DownloadPlantIMG()">
                 Save PNG 
+            </button>
+            <button type="button" id="clear-canvas" value="Clear"
+                onclick="clearCanvas()">
+                Clear
             </button>
         </form>
     </div>
@@ -64,7 +83,7 @@
     <script src="utilities.js"></script>
 
     <div id="canvas-wrapper">
-        <canvas id="canvas" width=500 height=750></canvas>
+        <canvas id="canvas" width=1000 height=1500></canvas>
     </div>
 
     <script src="events.js"></script>

@@ -2,15 +2,16 @@
 * plant-gen.js
 */
 
+console.log("running plant-gen.js...");
+
 let t = new Turtle([width/2, height/2]);
-var plantGenes = new Array();
-var genealogy = {};
+let genResults = new Array();
 
 var selectedLayer;
 var plantPath;  // to be moved
 
 // TEMP
-var submitCounter = 0; 
+var submit_counter = 0; 
 
 (function() {
     var form = document.getElementById('plantForm');
@@ -20,10 +21,9 @@ var submitCounter = 0;
 
         var elements = this.elements;
         
-        // CLEAN HOUSE
         t.reset();
         resetGenerations();
-        deselectLayer() 
+        prepareCanvas();
 
         var i = 0;  // never a case where a match isn't found...!
         for (; i < presets.length; i++) {
@@ -54,53 +54,31 @@ var submitCounter = 0;
         console.log(t.getAngle());
 
         // declare new layer, name it (need to inc. xxxx)
-        layerName = String(presets[i].name) + "_plantLayer" + submitCounter;
-        createLayer(layerName);
+        layer_name = "plant_layer_" + String(submit_counter);
+        createLayer(layer_name);
 
-        console.log("active layer - " + paper.project.activeLayer.name);
         console.log(paper.project.layers);
 
         lindenmayer(axiom, rules, n); // , angle);
-        getGenealogy();
-        submitCounter++;
+        submit_counter++;
     });
 } ());
-
-/*
-function updatePlantForm()
-{
-    if (selectedLayer) {
-        console.log("UPDATE FORM - SELECTED LAYER = " + selectedLayer);
-        console.log(document.getElementById('fractalType').value + " <--- WORKS?");
-        console.log(selectedLayer.name.charAt(0) + " <--- PWEASE?");
-        if (!(selectedLayer.name.charAt(0) === document.getElementById('fractalType').value)) {
-            let idx = parseInt(selectedLayer.name.charAt(0));
-            console.log("WORK PLEASE");
-            document.getElementById('fractalType').value = presets[idx].name;
-            document.getElementById('genSlider').max = presets[idx].generation;  
-            document.getElementById('scaleSlider').max = presets[idx].max_step;
-        }
-    }
-}
-*/
 
 function lindenmayer(axiom, rules, n, angle)
 {   
     plantPath = new paper.CompoundPath();  // to be moved
-    plantPath.name = "plantPath" + submitCounter;
+    plantPath.name = "plantPath";
     plantPath.strokeColor = 'black';
 
-    plantGenes.push(resultant);
+    genResults.push(axiom);
     var resultant = axiom;
     for (let i = 0; i < n; i++) { 
         resultant = applyRules(rules, resultant);
-        plantGenes.push(resultant);
+        genResults.push(resultant);
     }
 
     draw(resultant);
     plantPath.closePath();
-
-    genealogy[paper.project.activeLayer.name] = [...plantGenes];
 }
 
 function draw(resultant)
@@ -124,7 +102,7 @@ function draw(resultant)
 
 function applyRules(rules, current)
 {      
-    let newCurrent = "";
+    let new_current = "";
     let next = "";
 
     for (let i = 0; i < current.length; i++) {
@@ -139,12 +117,12 @@ function applyRules(rules, current)
         else {
             next = c;
         }
-        newCurrent += next; 
+        new_current += next; 
         next = "";
     }
 
-    newCurrent = newCurrent.replace(/['"]+/g, '');
-    current = newCurrent;
+    new_current = new_current.replace(/['"]+/g, '');
+    current = new_current;
     return current;
 } 
 
@@ -202,26 +180,21 @@ function drawLSystem(resultant)
 
 function getGenerationX(idx)
 {
-    if (selectedLayer)
-        currentLayer = selectedLayer;
-    else currentLayer = paper.project.activeLayer;
-    currentName = currentLayer.name;
-
-    console.log("LAYER - " + currentLayer.name);
-
     let origin = t.getOrigin();
-    clearLayer(currentLayer);
+    current_layer_name = paper.project.activeLayer.name;
+    clearLayer();
 
+    prepareCanvas();
     t.setPosition();
     t.resetAngle();
     t.initBoundaries();
-    createLayer(currentName);
+    createLayer(current_layer_name);
 
     plantPath = new paper.CompoundPath();
     plantPath.name = "plantPath";
     plantPath.strokeColor = 'black';
     plantPath.moveTo(origin[0], origin[1]);
-    drawLSystem((genealogy[currentLayer.name])[idx]);
+    drawLSystem(genResults[idx]);
     plantPath.closePath();
 }
 
@@ -232,14 +205,8 @@ function getGenerationIndex()
 
 function resetGenerations()
 {
-    while (plantGenes.length != 0)
-        plantGenes.pop();
-}
-
-function getGenealogy()
-{
-    for (const [key, value] of Object.entries(genealogy))
-        console.log(key, value)
+    while (genResults.length != 0)
+        genResults.pop();
 }
 
 document.getElementById("genSlider").addEventListener('click', (event) => {
@@ -264,50 +231,38 @@ document.getElementById("scaleSlider").addEventListener('click', (event) => {
 
 // DRAG MODE -------------------------------------------------------------------
 
+// eventually implement it so that it cycles through plants to find proper layer
+// ex.
+// if (event.point within plant_layer_x.child.bounds)
+//  plant_layer_x becomes active layer, plant becomes draggable...
 paper.tool.onMouseDown = function(event) 
 {
     for (let i = (paper.project.layers).length- 1; i > 0; i--) {
-        let currentLayer = paper.project.layers[i];
 
-        let currentPlant = currentLayer.children[0];
-        if (currentPlant.bounds.contains(event.point)) {
-            currentPlant.bounds.selected = true;
-            if (selectedLayer) {
-                if (!(currentLayer.name === selectedLayer.name))
-                    selectedLayer.children[0].bounds.selected = false;
-            }
-            selectedLayer = currentLayer;
-            console.log("CLICKED - selectedLayer = " + selectedLayer.name);
+        let current_layer = paper.project.layers[i];
+        console.log("current_layer - " + current_layer.name);
+
+        let active_plant = current_layer.children[0];
+        if (active_plant.bounds.contains(event.point)) {
+            active_plant.bounds.selected = true;
+            if (!(current_layer.name === selectedLayer.name))
+                selectedLayer.children[0].bounds.selected = false;
+            selectedLayer = active_plant.parent;
             break;
         }
-        else
-            deselectLayer();
     }
 }
 
 paper.tool.onMouseDrag = function(event) 
 {
-    if (selectedLayer)
+    if (!(selectedLayer === undefined))
         selectedLayer.children[0].position = event.point;
-}
-
-// DELETE SELECTED LAYER -------------------------------------------------------
-
-// UI implementation ! make it so that there's an 'X' somewhere along plant bounds
-paper.tool.onKeyUp = function(event)
-{
-    if (event.key == 'backspace') {
-        if (selectedLayer)
-            clearLayer(selectedLayer); 
-        selectedLayer = undefined;
-    }
 }
 
 // DOWNLOAD --------------------------------------------------------------------
 
 function DownloadPlantIMG()
 {
-    deselectLayer();  // to not print bound lines...
     let dLink = document.createElement('a');
     let fileName = 'plant' + Date.now().toString() + '.png';
     dLink.setAttribute('download', fileName);
